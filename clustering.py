@@ -1,7 +1,7 @@
 import numpy as np;
 import time as tm;
 from scipy.spatial import distance;
-from scipy.optimize import minimize;
+from scipy.optimize import minimize, basinhopping;
 import matplotlib.pyplot as plt;
 from mpl_toolkits.mplot3d import Axes3D;
 from sklearn.decomposition import PCA;
@@ -28,10 +28,10 @@ def GetClusters(centers):
 	clusters = [[] for _ in range(k)];
 	distances = [];
 	for i in range(n):
-		min_distance = distance.minkowski(data[i], centers[0], 1);
+		min_distance = distance.minkowski(data[i], centers[0], 2);
 		idx = 0;
 		for j in range(1, k):
-			d_temp = distance.minkowski(data[i], centers[j], 1);
+			d_temp = distance.minkowski(data[i], centers[j], 2);
 			if(d_temp < min_distance):
 				min_distance = d_temp;
 				idx = j;
@@ -39,13 +39,10 @@ def GetClusters(centers):
 		distances.append(min_distance);
 	return clusters, distances;
 
-def Evaluate(y, yTrue):
-	return ;
-
 
 def J(centers):
 	clusters, distances = GetClusters(centers);
-	return np.median(distances);
+	return np.mean(distances)**2;
 
 start_time = tm.time();
 
@@ -73,7 +70,9 @@ centers = centers.flatten();
 # Optimize function
 print("Initial function value:", J(centers));
 
-res = minimize(J, centers, method='BFGS', options={'disp': True});
+res = minimize(J, centers, method='BFGS',
+		options={'disp': True, 'maxiter': 10});
+#res = basinhopping(J, centers, niter=2, disp=True);
 centers = res.x;
 
 print("Centers found:");
@@ -97,4 +96,4 @@ from sklearn.cluster import KMeans
 kmeans = KMeans(n_clusters=k, random_state=0).fit(data);
 print("Adjusted mutual information: %.3f %%" %(100 * metrics.adjusted_mutual_info_score(target, kmeans.labels_)));
 
-ShowIris(data, target, "Global optimization algorithm");
+ShowIris(data, labels, "Global optimization algorithm");
