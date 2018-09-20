@@ -13,16 +13,30 @@ def J(c):
 	return dist;
 
 p = np.array([[1, 1], [4, 1], [1, 6], [-1, 4], [5, 4], [4, 25]]);
-plot(p);
-c = np.array([[0, 0]]);
-print(J(c));
+#plot(p);
+print("Mean:");
+c = np.mean(p, axis=0);
+print(c);
+print(J(c), "\n");
+#plt.plot(c[0], c[1], 'go');
 res = minimize(J, c, method='BFGS', options={'disp': True});
 c = res.x;
-plt.plot(c[0], c[1], 'ro');
-print("Solution found:");
+#plt.plot(c[0], c[1], 'ro');
+print("\nSolution found:");
 print(c);
-print("\nMean:");
-mean = np.mean(p, axis=0);
-print(mean);
-plt.plot(mean[0], mean[1], 'go');
-plt.show();
+#plt.show();
+
+# Second method
+print("\n\nSecond method");
+c = np.mean(p, axis=0);
+print(c);
+print(J(c));
+for _ in range(20):
+	num, den = 0, 0;
+	for pi in p:
+		norm = np.sqrt(np.sum([d*d for d in pi-c]));
+		num += pi / norm;
+		den += 1 / norm;
+	c = num / den;
+	print(c);
+	print(J(c));
