@@ -44,7 +44,8 @@ int main(int argc, char const *argv[]){
 	// Initialize the spider values
 	double r = 0, spiders[numbSpiders][dk];
 	for(j=0; j<dk; j++) r += high[j] - low[j];
-	r /= 2.0 * numbSpiders;
+	//r /= 2.0 * dk;
+	r /= dk;
 	for(i=0; i<numbSpiders; i++)
 		for(j=0; j<dk; j++){
 			spiders[i][j] = low[j] + random() * (high[j] - low[j]);
@@ -138,17 +139,37 @@ int main(int argc, char const *argv[]){
 						alpha * vibfi * (spiders[sf][dim] - spiders[i][dim])
 						+ delta * (random() - 0.5);
 			}
-			else{
-				// Perform movement
+			else
 				for(dim=0; dim<dk; dim++)
 					spiders[i][dim] += alpha * (temp[dim] - spiders[i][dim]);
-			}
 		}
 
 		// Perform mating operation
 		for(i=numbF; i<numbSpiders; i++)
 			if(weight[i] > wmedianMale){
-				//printf("Dominant\n");
+				int T[numbF], idx = 1;
+				T[0] = i;
+				sumwMale = weight[i];
+				for(j=0; j<numbF; j++){
+					double distance = 0.0;
+					for(dim=0; dim<dk; dim++)
+						distance += pow(spiders[i][dim] - spiders[j][dim], 2);
+					distance = sqrt(distance);
+					if(distance <= r){
+						T[idx++] = j;
+						sumwMale += weight[j];
+					}
+				}
+				if(idx > 1){
+					// Form the brood
+					for(dim=0; dim<dk; dim++){
+						for(j=0; j<idx; j++){
+							if(random() * sumwMale <= weight[j]){
+								temp[dim] = spiders[j][dim];
+							}
+						}
+					}
+				}
 			}
 
 		// Save or show some results
