@@ -37,7 +37,7 @@ int main(int argc, char const *argv[]){
 		for(j=0; j<d; j++) data[i][j] = (data[i][j] - mean[j]) / std[j];*/
 
 	// Generate initial centers
-	srand(0);
+	srand(time(NULL));
 	double centers[k][d], lowers[d], uppers[d];
 	for(j=0; j<d; j++) lowers[j] = uppers[j] = data[0][j];
 	for(i=1; i<n; i++)
@@ -49,39 +49,23 @@ int main(int argc, char const *argv[]){
 		for(j=0; j<d; j++)
 			centers[i][j] = lowers[j] + random() * (uppers[j] - lowers[j]);
 
-	// Denle this
-	/*centers[0][0] = 5.01213868;
-	centers[0][1] = 3.40310154;
-	centers[0][2] = 1.47163904;
-	centers[0][3] = 0.23540679;
-
-	centers[1][0] = 5.93432784;
-	centers[1][1] = 2.79779913;
-	centers[1][2] = 4.41789295;
-	centers[1][3] = 1.4172667;
-
-	centers[2][0] = 6.73334675;
-	centers[2][1] = 3.0678501;
-	centers[2][2] = 5.6300751;
-	centers[2][3] = 2.10679832;*/
-
 	// Generate initial clusters
 	int labels_pred[n];
 	double distances[n];
 	for(j=0; j<n; j++) distances[j] = 1<<30;
-		for(i=0; i<n; i++){
-			for(j=0; j<k; j++){
-				// Calculate distance from point Pi to center cj
-				double distance = 0.0;
-				for(dim=0; dim<d; dim++)
-					distance += pow(data[i][dim] - centers[j][dim], 2);
-				distance = sqrt(distance);
-				if(distance < distances[i]){
-					distances[i] = distance;
-					labels_pred[i] = j;
-				}
+	for(i=0; i<n; i++){
+		for(j=0; j<k; j++){
+			// Calculate distance from point Pi to center cj
+			double distance = 0.0;
+			for(dim=0; dim<d; dim++)
+				distance += pow(data[i][dim] - centers[j][dim], 2);
+			distance = sqrt(distance);
+			if(distance < distances[i]){
+				distances[i] = distance;
+				labels_pred[i] = j;
 			}
 		}
+	}
 
 	// Iterate the algorithm
 	bool stopCriteria = false;
@@ -90,7 +74,8 @@ int main(int argc, char const *argv[]){
 	while(stopCriteria == false){
 		printf("Iteration %d\n", ++iteration);
 
-		// Calculate new centers
+		// Calculate new centers (Weiszfeld's algorithm)
+		// Mean point
 		int sizes[k];
 		for(i=0; i<k; i++){
 			for(j=0; j<d; j++) centers[i][j] = 0;
@@ -103,8 +88,26 @@ int main(int argc, char const *argv[]){
 		}
 		for(i=0; i<k; i++)
 			for(j=0; j<d; j++) centers[i][j] /= sizes[i];
-		for(i=0; i<20; i++){
-			double den = 0.0;
+		// Iterative gradient descent
+		double num[k][d], den[k];
+		int temp_iterations = 20;
+		while(temp_iterations --){
+			for(i=0; i<k; i++){
+				for(j=0; j<d; j++) num[i][j] = 0.0;
+				den[i] = 0.0;
+			}
+			for(i=0; i<n; i++){
+				int idx = labels_pred[i];
+				double distance = 0.0;
+				for(dim=0; dim<d; dim++)
+					distance += pow(data[i][dim] - centers[idx][dim], 2);
+				distance = sqrt(distance);
+				for(dim=0; dim<d; dim++)
+					num[idx][dim] += data[i][dim] / distance;
+				den[idx] += 1 / distance;
+			}
+			for(i=0; i<k; i++)
+				for(j=0; j<d; j++) centers[i][j] = num[i][j] / den[i];
 		}
 
 		// Generate new clusters
@@ -129,6 +132,8 @@ int main(int argc, char const *argv[]){
 			if(temp_labels[i] != labels_pred[i]) stopCriteria = false;
 		for(i=0; i<n; i++) labels_pred[i] = temp_labels[i];
 
+		//if(iteration == 1) stopCriteria = true;
+
 		// Calculate the current function value and save if possible
 		double cost = 0.0;
 		for(i=0; i<n; i++) cost += distances[i];
@@ -145,12 +150,12 @@ int main(int argc, char const *argv[]){
 		printf("\n");
 	}
 	printf("\nBest function value: %.5f\n", bestSoFar);
-	printf("%30c Executed in %.3f s.",
-		32, (double)(clock() - _start)/CLOCKS_PER_SEC);
+	printf("%30c Executed in %.0f ms.",
+		32, 1000.0*(double)(clock() - _start)/CLOCKS_PER_SEC);
 	printf("\n\n");
-	for(i=0; i<n; i++) printf("%d ", labels_pred[i]);
-	printf("\n");
 	for(i=0; i<n; i++) printf("%d ", labels[i]);
+	printf("\n");
+	for(i=0; i<n; i++) printf("%d ", labels_pred[i]);
 	printf("\n");
 	return 0;
 }
