@@ -25,7 +25,7 @@ int main(int argc, char const *argv[]){
 	}
 
 	// Scale the data
-	double mean[d], std[d];
+	/*double mean[d], std[d];
 	for(i=0; i<d; i++) mean[i] = std[i] = 0;
 	for(i=0; i<n; i++)
 		for(j=0; j<d; j++) mean[j] += data[i][j];
@@ -34,10 +34,10 @@ int main(int argc, char const *argv[]){
 		for(j=0; j<d; j++) std[j] += pow(data[i][j] - mean[j], 2);
 	for(i=0; i<d; i++) std[i] = sqrt(std[i] / n);
 	for(i=0; i<n; i++)
-		for(j=0; j<d; j++) data[i][j] = (data[i][j] - mean[j]) / std[j];
+		for(j=0; j<d; j++) data[i][j] = (data[i][j] - mean[j]) / std[j];*/
 
 	// Generate initial centers
-	srand(0);
+	srand(time(NULL));
 	double centers[k][d], lowers[d], uppers[d];
 	for(j=0; j<d; j++) lowers[j] = uppers[j] = data[0][j];
 	for(i=1; i<n; i++)
