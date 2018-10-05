@@ -24,17 +24,19 @@ int main(int argc, char const *argv[]){
 		labels[i] = x;
 	}
 
-	// Scale the data
-	/*double mean[d], std[d];
-	for(i=0; i<d; i++) mean[i] = std[i] = 0;
-	for(i=0; i<n; i++)
-		for(j=0; j<d; j++) mean[j] += data[i][j];
-	for(i=0; i<d; i++) mean[i] /= n;
-	for(i=0; i<n; i++)
-		for(j=0; j<d; j++) std[j] += pow(data[i][j] - mean[j], 2);
-	for(i=0; i<d; i++) std[i] = sqrt(std[i] / n);
-	for(i=0; i<n; i++)
-		for(j=0; j<d; j++) data[i][j] = (data[i][j] - mean[j]) / std[j];*/
+	if(argc == 2){
+		// Scale the data
+		double mean[d], std[d];
+		for(i=0; i<d; i++) mean[i] = std[i] = 0;
+		for(i=0; i<n; i++)
+			for(j=0; j<d; j++) mean[j] += data[i][j];
+		for(i=0; i<d; i++) mean[i] /= n;
+		for(i=0; i<n; i++)
+			for(j=0; j<d; j++) std[j] += pow(data[i][j] - mean[j], 2);
+		for(i=0; i<d; i++) std[i] = sqrt(std[i] / n);
+		for(i=0; i<n; i++)
+			for(j=0; j<d; j++) data[i][j] = (data[i][j] - mean[j]) / std[j];
+	}
 
 	// Generate initial centers
 	srand(time(NULL));
