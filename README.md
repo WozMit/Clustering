@@ -4,7 +4,7 @@ Three algorithms are tested:
 * EM
 * SSO Clustering
 
-## Compiling
+## Compiling and running
 
 ### K-Means
 
@@ -12,10 +12,10 @@ The K-Means algorithm is written in C in just one file: `k-means.c`. To compile 
 
 `gcc -o <executable_name> k-means.c`
 
-For executing:
+To execute it:
 
 `<executable_name> < <dataset_path> <scaling_argument>`
 
 Where:
 * `<dataset_path>`: Path to the dataset file formatted as specified
-* `<scaling_argument>`: Some non empty argument for Z-scaling, empty for no scaling
+* `<scaling_argument>`: Some non empty argument for Z-score normalization, empty argument for no scaling
