@@ -1,7 +1,7 @@
 # Clustering
 Three algorithms are tested:
 * K-means
-* EM
+* Emax
 * SSO Clustering
 
 ## Compiling and running
@@ -10,12 +10,28 @@ Three algorithms are tested:
 
 The K-Means algorithm is written in C in just one file: `k-means.c`. To compile it, run
 
-`gcc -o <executable_name> k-means.c`
+`gcc -o <exe> k-means.c`
 
 To execute it:
 
-`<executable_name> < <dataset_path> <scaling_argument>`
+`<exe> < <dataset_path> <scaling_argument>`
 
 Where:
 * `<dataset_path>`: Path to the dataset file formatted as specified
+* `<exe>`: Name of the executable file
+* `<scaling_argument>`: Some non empty argument for Z-score normalization, empty argument for no scaling
+
+### Emax
+
+The Emax algorithm is written in C in just one file: `emax.c`. To compile it, run
+
+`gcc -o <exe> emax.c`
+
+To execute it:
+
+`<exe> < <dataset_path> <scaling_argument>`
+
+Where:
+* `<dataset_path>`: Path to the dataset file formatted as specified
+* `<exe>`: Name of the executable file
 * `<scaling_argument>`: Some non empty argument for Z-score normalization, empty argument for no scaling
