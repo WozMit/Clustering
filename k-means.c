@@ -131,9 +131,9 @@ int main(int argc, char const *argv[]){
 	printf("%30c Executed in %.0f ms.",
 		32, 1000.0*(double)(clock() - _start)/CLOCKS_PER_SEC);
 	printf("\n\n");
-	for(i=0; i<n; i++) printf("%d ", labels_pred[i]);
-	printf("\n");
 	for(i=0; i<n; i++) printf("%d ", labels[i]);
+	printf("\n");
+	for(i=0; i<n; i++) printf("%d ", labels_pred[i]);
 	printf("\n");
 	return 0;
 }
