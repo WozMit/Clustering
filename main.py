@@ -30,8 +30,20 @@ iris_dataset = "datasets\\iris.woz";
 vowel_dataset = "datasets\\vowel_indian.woz";
 wine_dataset = "datasets\\wine.woz";
 
-os.system('gcc -o a emax.c');
-os.system('a < datasets\\iris.woz > output');
+# Get a dataset list
+datasets = [];
+for dir_name, sub_dir_list, dir_file_list in os.walk('datasets'):
+	for file in dir_file_list:
+		if(len(file) > 3 and file[-4:] == '.woz'):
+			datasets.append(os.path.join(dir_name, file));
+
+# Compile command
+#os.system('gcc -o a emax.c');
+
+# Execute command
+dataset = iris_dataset;
+command = "a < " + dataset + " > output";
+os.system(command);
 
 # Read the last line of the output file
 with open('output') as file:
@@ -45,7 +57,7 @@ ami = metrics.adjusted_mutual_info_score(a, b);
 print("Adjusted mutual information: %.5f" %ami);
 
 # Read the dataset
-with open(iris_dataset) as file:
+"""with open(cancer_dataset) as file:
 	lines = [line[:-1] for line in file];
 	file.close();
 n, d, k = map(int, lines[0].split(' '));
@@ -57,5 +69,8 @@ for i in range(n):
 	labels_true[i] = x[d];
 labels_true = labels_true.astype(int);
 
+# Scale the data
+data = (data - np.mean(data))/np.std(data);
+
 # Plot the dataset in 3d
-PlotDataset(data, labels_true);
+PlotDataset(data, labels_true);"""

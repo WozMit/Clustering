@@ -30,8 +30,8 @@ int main(int argc, char const *argv[]){
 	int low[dk], high[dk];
 	int i, j, dim;
 	for(i=0; i<dk; i++){
-		low[i] = -10;
-		high[i] = 10;
+		low[i] = -1;
+		high[i] = 3;
 	}
 
 	// Initialize the parameters
@@ -59,7 +59,7 @@ int main(int argc, char const *argv[]){
 		printf("Iteration %d\n", ++iteration);
 		// Calculate the weight of every spider
 		double weight[numbSpiders], bestVal, worstVal;
-		int sc, sb, sf;
+		int sc, sb = 0, sf;
 		for(i=0; i<numbSpiders; i++){
 			weight[i] = J(spiders[i]);
 			if(i == 0) bestVal = worstVal = weight[0];
@@ -110,9 +110,8 @@ int main(int argc, char const *argv[]){
 		double sumwMale = 0.0;
 		for(j=0; j<dk; j++) temp[j] = 0;
 		for(i=numbF; i<numbSpiders; i++){
-			for(j=0; j<dk; j++){
+			for(j=0; j<dk; j++)
 				temp[j] += spiders[i][j] * weight[i];
-			}
 			sumwMale += weight[i];
 		}
 		for(j=0; j<dk; j++) temp[j] /= sumwMale;
@@ -161,19 +160,32 @@ int main(int argc, char const *argv[]){
 					}
 				}
 				if(idx > 1){
-					// Form the brood
-					for(dim=0; dim<dk; dim++){
-						for(j=0; j<idx; j++){
-							if(random() * sumwMale <= weight[j]){
-								temp[dim] = spiders[j][dim];
-							}
+					// Form the brood in temp
+					for(dim=0; dim<dk; dim++) temp[dim] = 0.0;
+					for(j=0; j<idx; j++)
+						for(dim=0; dim<dk; dim++)
+							temp[dim] += spiders[ T[j] ][dim] *
+									weight[ T[j] ] / sumwMale;
+					sumwMale = (J(temp) - worstVal) / (bestVal - worstVal);
+					// Find the worst spider
+					double worstWeight = -1.0;
+					idx = 0;
+					for(j=0; j<numbSpiders; j++)
+						if(j == 0 || weight[j] < worstWeight){
+							worstWeight = weight[j];
+							idx = j;
 						}
+					if(sumwMale > weight[idx]){
+						// Replace worst spider
+						for(dim=0; dim<dk; dim++)
+							spiders[idx][dim] = temp[dim];
+						weight[idx] = sumwMale;
 					}
 				}
 			}
 
 		// Save or show some results
-		if(iteration == 1) stopCriteria = true;
+		if(iteration == 10) stopCriteria = true;
 		bestVal = J(spiders[0]);
 		int spider = 0;
 		for(i=1; i<numbSpiders; i++){
@@ -194,7 +206,7 @@ int main(int argc, char const *argv[]){
 	printf("Best spider:\n");
 	for(i=0; i<dk; i++) printf("%lf ", bestSpider[i]);
 	printf("\n");
-	printf("%30c Executed in %.3f s.",
-		32, (double)(clock() - _start)/CLOCKS_PER_SEC);
+	printf("%30c Executed in %.0f ms.",
+		32, 1000.0*(double)(clock() - _start)/CLOCKS_PER_SEC);
 	return 0;
 }
