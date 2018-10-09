@@ -246,7 +246,7 @@ int main(int argc, char const *argv[]){
 			}
 
 		// Save or show some results
-		if(iteration == 100) stopCriteria = true;
+		if(iteration == 1000) stopCriteria = true;
 		bestVal = J(spiders[0]);
 		int spider = 0;
 		for(i=1; i<numbSpiders; i++){
