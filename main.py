@@ -40,7 +40,7 @@ for dir_name, sub_dir_list, dir_file_list in os.walk('datasets'):
 # Compile command
 #os.system('gcc -o a k-means.c');
 #os.system('gcc -o a emax.c');
-#os.system('gcc -o a SSO-clustering.c');
+os.system('gcc -o a SSO-clustering.c');
 
 # Execute command
 dataset = iris_dataset;

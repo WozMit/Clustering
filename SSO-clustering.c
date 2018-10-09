@@ -114,18 +114,27 @@ int main(int argc, char const *argv[]){
 	// Execute the algorithm
 	bool stopCriteria = false;
 	double bestSpider[dk], bestSoFar;
-	int iteration = 0;
+	int iteration = 0, max_iterations = 100;
 	while(stopCriteria == false){
 		printf("Iteration %d\n", ++iteration);
 		// Calculate the weight of every spider
-		double weight[numbSpiders], bestVal, worstVal;
+		double weight[numbSpiders], bestVal, worstVal, maxDistance = -1.0;
 		int sc, sb = 0, sf;
 		for(i=0; i<numbSpiders; i++){
 			weight[i] = J(spiders[i]);
 			if(i == 0) bestVal = worstVal = weight[0];
 			if(weight[i] < bestVal) bestVal = weight[i], sb = i;
 			if(weight[i] > worstVal) worstVal = weight[i];
+			for(j=i+1; j<numbSpiders; j++){
+				double distance = 0.0;
+				for(dim=0; dim<dk; dim++)
+					distance += pow(spiders[i][dim] - spiders[j][dim], 2);
+				distance = sqrt(distance);
+				if(maxDistance == -1.0 || distance > maxDistance)
+					maxDistance = distance;
+			}
 		}
+		maxDistance /= sqrt(2.0);
 		for(i=0; i<numbSpiders; i++)
 			weight[i] = (weight[i] - worstVal) / (bestVal - worstVal);
 
@@ -138,10 +147,10 @@ int main(int argc, char const *argv[]){
 					double distance = 0.0;
 					for(dim=0; dim<dk; dim++)
 						distance += pow(spiders[i][dim] - spiders[j][dim], 2);
-					distance = sqrt(distance);
+					distance = sqrt(distance) / maxDistance;
 					if(miniDistance == -1.0 || distance < miniDistance){
 						miniDistance = distance;
-						vibci = weight[j] * exp(-miniDistance*miniDistance);
+						vibci = weight[j] / exp(miniDistance*miniDistance);
 						sc = j;
 					}
 				}
@@ -149,7 +158,9 @@ int main(int argc, char const *argv[]){
 			double vibbi = 0.0;
 			for(dim=0; dim<dk; dim++)
 				vibbi += pow(spiders[i][dim] - spiders[sb][dim], 2);
-			vibbi = exp(-vibbi);
+			vibbi = sqrt(vibbi) / maxDistance;
+			vibbi = weight[sc] / exp(vibbi*vibbi);
+			//printf("%lf\n", vibci);
 			// Perform movement
 			double alpha = random(), beta = random(), delta = random();
 			if(random() < PF) alpha = -alpha, beta = -beta;
@@ -185,10 +196,10 @@ int main(int argc, char const *argv[]){
 					double distance = 0.0;
 					for(dim=0; dim<dk; dim++)
 						distance += pow(spiders[i][dim] - spiders[j][dim], 2);
-					distance = sqrt(distance);
+					distance = sqrt(distance) / maxDistance;
 					if(j == 0 || distance < miniDistance){
 						miniDistance = distance;
-						vibfi = weight[j] * exp(-miniDistance*miniDistance);
+						vibfi = weight[j] / exp(miniDistance*miniDistance);
 						sf = j;
 					}
 				}
@@ -246,7 +257,7 @@ int main(int argc, char const *argv[]){
 			}
 
 		// Save or show some results
-		if(iteration == 1000) stopCriteria = true;
+		if(iteration == max_iterations) stopCriteria = true;
 		bestVal = J(spiders[0]);
 		int spider = 0;
 		for(i=1; i<numbSpiders; i++){
