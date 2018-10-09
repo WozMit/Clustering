@@ -72,7 +72,7 @@ int main(int argc, char const *argv[]){
 	// Iterate the algorithm
 	bool stopCriteria = false;
 	double bestSoFar;
-	int iteration = 0, temp_labels[n];
+	int iteration = 0, temp_labels[n], clusters_size[k];
 	while(stopCriteria == false){
 		printf("Iteration %d\n", ++iteration);
 
@@ -102,6 +102,34 @@ int main(int argc, char const *argv[]){
 				if(distance < distances[i]){
 					distances[i] = distance;
 					temp_labels[i] = j;
+				}
+			}
+		}
+		
+		// Check for empty clusters
+		for(i=0; i<k; i++) clusters_size[i] = 0;
+		for(i=0; i<n; i++) clusters_size[ temp_labels[i] ]++;
+		dim = 0;
+		for(i=0; i<k && dim == 0; i++)
+			if(clusters_size[i] == 0) dim = 1;
+		if(dim == 1){
+			// Re assign all centers
+			for(i=0; i<k; i++)
+				for(j=0; j<d; j++)
+					centers[i][j] = lowers[j] + random() * (uppers[j] - lowers[j]);
+			// Generate new clusters
+			for(j=0; j<n; j++) distances[j] = 1<<30;
+			for(i=0; i<n; i++){
+				for(j=0; j<k; j++){
+					// Calculate distance from point Pi to center cj
+					double distance = 0.0;
+					for(dim=0; dim<d; dim++)
+						distance += pow(data[i][dim] - centers[j][dim], 2);
+					distance = sqrt(distance);
+					if(distance < distances[i]){
+						distances[i] = distance;
+						temp_labels[i] = j;
+					}
 				}
 			}
 		}
