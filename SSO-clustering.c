@@ -4,7 +4,7 @@
 #include <stdlib.h>
 #include <stdbool.h>
 int n, d, k;
-double **data, **centers;
+double **data, **centers, coef1, coef2;
 
 double random(){
 	return (double)rand() / (double)RAND_MAX;
@@ -35,9 +35,11 @@ double J(double *x){
 				distances[i] = distance;
 		}
 	}
-	double sum = 0.0;
-	for(i=0; i<n; i++) sum += distances[i];
-	return sum;
+	double sum1 = 0.0, sum2 = 0.0;
+	for(i=0; i<n; i++)
+		sum1 += distances[i] * distances[i];
+		sum2 += distances[i];
+	return coef1 * sum1 + coef2 * sum2;
 }
 
 int main(int argc, char const *argv[]){
@@ -71,6 +73,8 @@ int main(int argc, char const *argv[]){
 		for(i=0; i<n; i++)
 			for(j=0; j<d; j++) data[i][j] = (data[i][j] - mean[j]) / std[j];
 	}
+	coef1 = 0.5;
+	coef2 = 1.0 - coef1;
 
 	// Generate initial centers
 	srand(0);
@@ -103,13 +107,11 @@ int main(int argc, char const *argv[]){
 	// Initialize the spider values
 	double r = 0, spiders[numbSpiders][dk];
 	for(j=0; j<dk; j++) r += high[j] - low[j];
-	r /= 1.3 * dk;
+	r /= 2 * dk;
 	for(i=0; i<numbSpiders; i++)
 		for(j=0; j<dk; j++){
 			spiders[i][j] = low[j] + random() * (high[j] - low[j]);
 		}
-
-
 
 	// Execute the algorithm
 	bool stopCriteria = false;
@@ -153,14 +155,12 @@ int main(int argc, char const *argv[]){
 						sc = j;
 					}
 				}
-			//printf("%lf\n", miniDistance);
 			if(i == sb) sc = i;
 			double vibbi = 0.0;
 			for(dim=0; dim<dk; dim++)
 				vibbi += pow(spiders[i][dim] - spiders[sb][dim], 2);
 			vibbi = sqrt(vibbi) / maxDistance;
 			vibbi = weight[sc] / exp(vibbi*vibbi);
-			//printf("%lf\n", vibci);
 			// Perform movement
 			double alpha = random(), beta = random(), delta = random();
 			if(random() < PF) alpha = -alpha, beta = -beta;
@@ -230,7 +230,6 @@ int main(int argc, char const *argv[]){
 					}
 				}
 				if(idx > 1){
-					printf("%d\n", idx);
 					// Form the brood in temp
 					for(dim=0; dim<dk; dim++) temp[dim] = 0.0;
 					for(j=0; j<idx; j++)
