@@ -129,12 +129,11 @@ int main(int argc, char const *argv[]){
 				double distance = 0.0;
 				for(dim=0; dim<dk; dim++)
 					distance += pow(spiders[i][dim] - spiders[j][dim], 2);
-				distance = sqrt(distance);
 				if(maxDistance == -1.0 || distance > maxDistance)
 					maxDistance = distance;
 			}
 		}
-		maxDistance /= sqrt(2.0);
+		maxDistance = sqrt(maxDistance) / 1.5;
 		for(i=0; i<numbSpiders; i++)
 			weight[i] = (weight[i] - worstVal) / (bestVal - worstVal);
 
@@ -154,6 +153,7 @@ int main(int argc, char const *argv[]){
 						sc = j;
 					}
 				}
+			//printf("%lf\n", miniDistance);
 			if(i == sb) sc = i;
 			double vibbi = 0.0;
 			for(dim=0; dim<dk; dim++)
@@ -217,21 +217,20 @@ int main(int argc, char const *argv[]){
 		// Perform mating operation
 		for(i=numbF; i<numbSpiders; i++)
 			if(weight[i] > wmedianMale){
-				int T[numbF];
-				idx = 1;
+				int T[numbF], idx = 1;
 				T[0] = i;
 				sumwMale = weight[i];
 				for(j=0; j<numbF; j++){
 					double distance = 0.0;
 					for(dim=0; dim<dk; dim++)
 						distance += pow(spiders[i][dim] - spiders[j][dim], 2);
-					distance = sqrt(distance);
-					if(distance <= r){
+					if(sqrt(distance) <= r){
 						T[idx++] = j;
 						sumwMale += weight[j];
 					}
 				}
 				if(idx > 1){
+					printf("%d\n", idx);
 					// Form the brood in temp
 					for(dim=0; dim<dk; dim++) temp[dim] = 0.0;
 					for(j=0; j<idx; j++)
