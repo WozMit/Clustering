@@ -36,9 +36,11 @@ double J(double *x){
 		}
 	}
 	double sum1 = 0.0, sum2 = 0.0;
-	for(i=0; i<n; i++)
+	for(i=0; i<n; i++){
 		sum1 += distances[i] * distances[i];
 		sum2 += distances[i];
+	}
+	//printf("%lf %lf\n", sum1, sum2);
 	return coef1 * sum1 + coef2 * sum2;
 }
 
@@ -59,22 +61,6 @@ int main(int argc, char const *argv[]){
 		int x; scanf("%d", &x);
 		labels[i] = x;
 	}
-
-	if(argc == 2){
-		// Scale the data
-		double mean[d], std[d];
-		for(i=0; i<d; i++) mean[i] = std[i] = 0;
-		for(i=0; i<n; i++)
-			for(j=0; j<d; j++) mean[j] += data[i][j];
-		for(i=0; i<d; i++) mean[i] /= n;
-		for(i=0; i<n; i++)
-			for(j=0; j<d; j++) std[j] += pow(data[i][j] - mean[j], 2);
-		for(i=0; i<d; i++) std[i] = sqrt(std[i] / n);
-		for(i=0; i<n; i++)
-			for(j=0; j<d; j++) data[i][j] = (data[i][j] - mean[j]) / std[j];
-	}
-	coef1 = 0.5;
-	coef2 = 1.0 - coef1;
 
 	// Generate initial centers
 	srand(0);
@@ -97,9 +83,17 @@ int main(int argc, char const *argv[]){
 			high[i + j] = uppers[j];
 		}
 
+	// Read arguments
+	int numbSpiders = 100, max_iterations = 100;
+	coef1 = 0.5;
+	if(argc == 4){
+		sscanf(argv[1], "%d", &numbSpiders);
+		sscanf(argv[2], "%d", &max_iterations);
+		sscanf(argv[3], "%lf", &coef1);
+	}
+	coef2 = 1.0 - coef1;
+
 	// Initialize the parameters
-	srand(time(NULL));
-	int numbSpiders = 100;
 	int numbF = (0.9 - random() * 0.25) * numbSpiders;
 	int numbM = numbSpiders - numbF;
 	double PF = 0.7;
@@ -116,7 +110,7 @@ int main(int argc, char const *argv[]){
 	// Execute the algorithm
 	bool stopCriteria = false;
 	double bestSpider[dk], bestSoFar;
-	int iteration = 0, max_iterations = 100;
+	int iteration = 0;
 	while(stopCriteria == false){
 		printf("Iteration %d\n", ++iteration);
 		// Calculate the weight of every spider
