@@ -63,7 +63,7 @@ int main(int argc, char const *argv[]){
 	}
 
 	// Generate initial centers
-	srand(0);
+	srand(time(NULL));
 	double lowers[d], uppers[d];
 	for(j=0; j<d; j++) lowers[j] = uppers[j] = data[0][j];
 	for(i=1; i<n; i++)
