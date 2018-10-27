@@ -44,7 +44,7 @@ os.system('gcc -o a SSO-clustering.c');
 
 # Execute command
 dataset = iris_dataset;
-command = "a < " + dataset + " > output";
+command = "a < " + dataset + " 100 100 0.3 > output";
 os.system(command);
 
 # Read the last line of the output file
