@@ -38,25 +38,28 @@ for dir_name, sub_dir_list, dir_file_list in os.walk('datasets'):
 			datasets.append(os.path.join(dir_name, file));
 
 # Compile command
-#os.system('gcc -o a k-means.c');
+os.system('gcc -o a k-means.c');
 #os.system('gcc -o a emax.c');
-os.system('gcc -o a SSO-clustering.c');
+#os.system('gcc -o a SSO-clustering.c');
 
 # Execute command
-dataset = iris_dataset;
-command = "a < " + dataset + " 100 100 0.3 > output";
-os.system(command);
+dataset = digits_dataset;
+#command = "a < " + dataset + " 100 100 0.2 > output";
+command = "a < " + dataset + " > output";
 
-# Read the last line of the output file
-with open('output') as file:
-	lines = [line[:-2] for line in file];
-	file.close();
-a = np.array([int(x) for x in lines[-2].split(' ')]);
-b = np.array([int(x) for x in lines[-1].split(' ')]);
+for _ in range(50):
+	os.system(command);
 
-# Get AMI score
-ami = metrics.adjusted_mutual_info_score(a, b);
-print("Adjusted mutual information: %.5f" %ami);
+	# Read the last line of the output file
+	with open('output') as file:
+		lines = [line[:-2] for line in file];
+		file.close();
+	a = np.array([int(x) for x in lines[-2].split(' ')]);
+	b = np.array([int(x) for x in lines[-1].split(' ')]);
+
+	# Get AMI score
+	ami = metrics.adjusted_mutual_info_score(a, b);
+	print("Adjusted mutual information: %.5f" %ami);
 
 # Read the dataset
 """with open(cancer_dataset) as file:

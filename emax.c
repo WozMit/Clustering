@@ -24,7 +24,7 @@ int main(int argc, char const *argv[]){
 		labels[i] = x;
 	}
 
-	if(argc == 2){
+	/*if(argc == 2){
 		// Scale the data
 		double mean[d], std[d];
 		for(i=0; i<d; i++) mean[i] = std[i] = 0;
@@ -36,7 +36,7 @@ int main(int argc, char const *argv[]){
 		for(i=0; i<d; i++) std[i] = sqrt(std[i] / n);
 		for(i=0; i<n; i++)
 			for(j=0; j<d; j++) data[i][j] = (data[i][j] - mean[j]) / std[j];
-	}
+	}*/
 
 	// Generate initial centers
 	srand(time(NULL));
