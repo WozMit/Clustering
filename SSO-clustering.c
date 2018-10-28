@@ -40,7 +40,6 @@ double J(double *x){
 		sum1 += distances[i] * distances[i];
 		sum2 += distances[i];
 	}
-	//printf("%lf %lf\n", sum1, sum2);
 	return coef1 * sum1 + coef2 * sum2;
 }
 
