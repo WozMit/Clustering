@@ -21,15 +21,6 @@ def PlotDataset(x, y, title=""):
 	ax.w_zaxis.set_ticklabels([]);
 	plt.show();
 
-balance_dataset = "datasets\\balance_scale.woz";
-cancer_dataset = "datasets\\breast_cancer.woz";
-oil_dataset = "datasets\\crude_oil.woz";
-diabetes_dataset = "datasets\\diabetes.woz";
-digits_dataset = "datasets\\digits.woz";
-iris_dataset = "datasets\\iris.woz";
-vowel_dataset = "datasets\\vowel_indian.woz";
-wine_dataset = "datasets\\wine.woz";
-
 # Get a dataset list
 datasets = [];
 for dir_name, sub_dir_list, dir_file_list in os.walk('datasets'):
@@ -38,14 +29,14 @@ for dir_name, sub_dir_list, dir_file_list in os.walk('datasets'):
 			datasets.append(os.path.join(dir_name, file));
 
 # Compile command
-os.system('gcc -o a k-means.c');
+#os.system('gcc -o a k-means.c');
 #os.system('gcc -o a emax.c');
-#os.system('gcc -o a SSO-clustering.c');
+os.system('gcc -o a SSO-clustering.c');
 
 # Execute command
-dataset = digits_dataset;
-#command = "a < " + dataset + " 100 100 0.2 > output";
-command = "a < " + dataset + " > output";
+dataset = "datasets\\iris.woz";
+command = "a < " + dataset + " 100 10 100 0.2 > output";
+#command = "a < " + dataset + " > output";
 
 for _ in range(50):
 	os.system(command);
