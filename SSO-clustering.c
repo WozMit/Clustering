@@ -74,7 +74,7 @@ int main(int argc, char const *argv[]){
 		for(j=0; j<d; j++)
 			centers[i][j] = lowers[j] + random() * (uppers[j] - lowers[j]);
 
-	int dk = d * k, idx;
+	int dk = d * k, idx, idx1;
 	double low[dk], high[dk];
 	for(i=0; i<dk; i+=d)
 		for(j=0; j<d; j++){
@@ -83,12 +83,13 @@ int main(int argc, char const *argv[]){
 		}
 
 	// Read arguments
-	int numbSpiders = 100, max_iterations = 100;
+	int numbSpiders = 100, greedy = 10, max_iterations = 100;
 	coef1 = 0.5;
-	if(argc == 4){
+	if(argc == 5){
 		sscanf(argv[1], "%d", &numbSpiders);
-		sscanf(argv[2], "%d", &max_iterations);
-		sscanf(argv[3], "%lf", &coef1);
+		sscanf(argv[2], "%d", &greedy);
+		sscanf(argv[3], "%d", &max_iterations);
+		sscanf(argv[4], "%lf", &coef1);
 	}
 	coef2 = 1.0 - coef1;
 
@@ -98,10 +99,41 @@ int main(int argc, char const *argv[]){
 	double PF = 0.7;
 
 	// Initialize the spider values
-	double r = 0, spiders[numbSpiders][dk];
+	double r = 0, spiders[numbSpiders][dk], distances[n];
+	// Greedy k-center
+	greedy = greedy * numbSpiders / 100;
+	for(idx1=0; idx1<greedy; idx1++){
+		int pos = 0, head = random() * n;
+		for(i=0; i<d; i++) spiders[idx1][pos++] = data[head][i];
+		for(i=0; i<n; i++){
+			double distance = 0.0;
+			for(dim=0; dim<d; dim++)
+				distance += pow(data[i][dim] - data[head][dim], 2);
+			distance = sqrt(distance);
+			distances[i] = distance;
+		}
+		for(idx=1; idx<k; idx++){
+			double maxiDistance = 0.0;
+			for(i=0; i<n; i++)
+				if(distances[i] > maxiDistance){
+					maxiDistance = distances[i];
+					head = i;
+				}
+			for(i=0; i<d; i++) spiders[idx1][pos++] = data[head][i];
+			for(i=0; i<n; i++){
+				double distance = 0.0;
+				for(dim=0; dim<d; dim++)
+					distance += pow(data[i][dim] - data[head][dim], 2);
+				distance = sqrt(distance);
+				if(distance < distances[i]) distances[i] = distance;
+			}
+		}
+	}
+
+	// Random initialization
 	for(j=0; j<dk; j++) r += high[j] - low[j];
 	r /= 2 * dk;
-	for(i=0; i<numbSpiders; i++)
+	for(i=greedy; i<numbSpiders; i++)
 		for(j=0; j<dk; j++){
 			spiders[i][j] = low[j] + random() * (high[j] - low[j]);
 		}
@@ -278,7 +310,6 @@ int main(int argc, char const *argv[]){
 
 	// Generate clusters
 	int labels_pred[n];
-	double distances[n];
 	for(j=0; j<n; j++) distances[j] = 1<<30;
 	for(i=0; i<n; i++){
 		for(j=0; j<k; j++){
