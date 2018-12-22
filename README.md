@@ -17,9 +17,9 @@ To execute it:
 `<exe> < <dataset_path> <scaling_argument>`
 
 Where:
-* `<dataset_path>`: Path to the dataset file formatted as specified
-* `<exe>`: Name of the executable file
-* `<scaling_argument>`: Some non empty argument for Z-score normalization, empty argument for no scaling
+* `<dataset_path>`: Path to the dataset file formatted as specified.
+* `<exe>`: Name of the executable file.
+* `<scaling_argument>`: Some non empty argument for Z-score normalization, empty argument for no scaling.
 
 ### Emax
 
@@ -32,9 +32,9 @@ To execute it:
 `<exe> < <dataset_path> <scaling_argument>`
 
 Where:
-* `<dataset_path>`: Path to the dataset file formatted as specified
-* `<exe>`: Name of the executable file
-* `<scaling_argument>`: Some non empty argument for Z-score normalization, empty argument for no scaling
+* `<dataset_path>`: Path to the dataset file formatted as specified.
+* `<exe>`: Name of the executable file.
+* `<scaling_argument>`: Some non empty argument for Z-score normalization, empty argument for no scaling.
 
 ### SSO-Clustering
 
@@ -47,7 +47,8 @@ To execute it:
 `<exe> < <dataset_path> <number_spiders> <iterations> <alpha>`
 
 Where:
-* `<dataset_path>`: Path to the dataset file formatted as specified
-* `<number_spiders>`: Number of biological agents to emulate (10, 50, 100, etc.)
-* `<iterations>`: Number of iterations (1, 10, 50, 100, 500, etc.)
-* `<alpha>`: Normalization parameter in [0, 1]
+* `<dataset_path>`: Path to the dataset file formatted as specified.
+* `<number_spiders>`: Number of biological agents to emulate (10, 50, 100, etc.). Defalult: 100.
+* `<number_spiders>`: Percentage of biological agents initialized with an approximation algorithm (5, 8, 10, etc.) in [0, 100]. Default: 10.
+* `<iterations>`: Number of iterations (1, 10, 50, 100, 500, etc.). Default: 100.
+* `<alpha>`: Normalization parameter in [0, 1]. Default: 0.2.
