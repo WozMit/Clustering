@@ -51,4 +51,4 @@ Where:
 * `<number_spiders>`: Number of biological agents to emulate (10, 50, 100, etc.). Defalult: 100.
 * `<approx_population>`: Percentage of biological agents initialized with an approximation algorithm (5, 8, 10, etc.) in [0, 100]. Default: 10.
 * `<iterations>`: Number of iterations (1, 10, 50, 100, 500, etc.). Default: 100.
-* `<alpha>`: Normalization parameter in [0, 1]. Default: 0.2.
+* `<alpha>`: Normalization parameter in [0, 1]. Default: 0.5.
