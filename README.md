@@ -2,7 +2,7 @@
 Three algorithms are tested:
 * K-means
 * Emax
-* SSO Clustering
+* SSO Clustering (proposed)
 
 ## Compiling and running
 
