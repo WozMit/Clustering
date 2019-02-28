@@ -42,7 +42,7 @@ def generate_on_distribution():
 	x = [];
 	y = [];
 
-	"""x1 = np.random.normal(-2, 1.3, 100);
+	x1 = np.random.normal(-2, 1.3, 100);
 	y1 = np.random.normal(2, 1.3, 100);
 	for a, b in zip(x1, y1):
 		x.append(a);
@@ -94,9 +94,9 @@ def generate_on_distribution():
 	y9 = np.random.normal(-2, 1.3, 100);
 	for a, b in zip(x9, y9):
 		x.append(a);
-		y.append(b);"""
+		y.append(b);
 
-	x1 = np.random.gamma(2, 2, 100);
+	"""x1 = np.random.gamma(2, 2, 100);
 	y1 = np.random.gamma(2, 2, 100);
 	for a, b in zip(x1, y1):
 		x.append(a);
@@ -112,14 +112,24 @@ def generate_on_distribution():
 	y3 = -np.random.gamma(2, 1.5, 100);
 	for a, b in zip(x3, y3):
 		x.append(a);
-		y.append(b);
+		y.append(b);"""
 
-	plt.plot(x1, y1, 'b.');
-	plt.plot(x2, y2, 'r.');
-	plt.plot(x3, y3, 'g.');
+	#plt.plot(x1, y1, 'b.');
+	#plt.plot(x2, y2, 'r.');
+	#plt.plot(x3, y3, 'g.');
+	plt.title("Dataset sintético 3(b)");
+	plt.plot(x1, y1, 'k.');
+	plt.plot(x2, y2, 'k_');
+	plt.plot(x3, y3, 'k3');
+	plt.plot(x4, y4, 'k1');
+	plt.plot(x5, y5, 'k^');
+	plt.plot(x6, y6, 'k+');
+	plt.plot(x7, y7, 'kx');
+	plt.plot(x8, y8, 'k<');
+	plt.plot(x9, y9, 'k|');
 	plt.show();
-	data = np.zeros((300, 2));
-	for i in range(300):
+	data = np.zeros((900, 2));
+	for i in range(900):
 		data[i][0] = x[i];
 		data[i][1] = y[i];
 	return data;

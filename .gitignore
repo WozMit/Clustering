@@ -1,3 +1,5 @@
 /__pycache__
+/datasets/get_datasets.py
 a.exe
 output
+test_file.py
